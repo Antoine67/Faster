@@ -4,25 +4,46 @@ import Felgo 3.0
 EntityBase {
 
   property var id
-  entityType: "box"
+  entityType: "spike"
   entityId: id
 
   property int velocity: velocity
   property int max_y
   property int min_y
+  property bool shouldReversePicture
 
-  height: cow_img.height
-  width: cow_img.width
+  height: spike_img.height
+  width: spike_img.width
 
-  MultiResolutionImage {
-    id: cow_img
-    source: "../../assets/img/bird_0.png"
+  /*MultiResolutionImage {
+    id: spike_img
+    source: "../../assets/img/bird.png"
     anchors.horizontalCenter: parent.horizontalCenter
-  }
+
+  }*/
+
+  SpriteSequence {
+     id: spriteSequence
+     mirrorX: shouldReversePicture
+
+     anchors.centerIn: parent
+
+     Sprite {
+       name: "spike_img"
+       id: spike_img
+       frameCount: 3
+       frameRate: 10
+
+       frameWidth: 32
+       frameHeight: 31
+       source: "../../assets/img/bird.png"
+     }
+     //rotation: collider.linearVelocity.y/10
+   }
 
   BoxCollider {
      id: collider
-     anchors.fill: cow_img
+     anchors.fill: spriteSequence
      bodyType: Body.Kinematic
      collisionTestingOnlyMode: true
      fixture.onBeginContact: {
@@ -31,12 +52,12 @@ EntityBase {
   }
 
   MovementAnimation {
-    id: movement
+    id: movement_x
     target: parent
     property: "x"
-    minPropertyValue: -300
+    minPropertyValue: -100
     maxPropertyValue: 1000
-    acceleration: 10
+    acceleration: 0
     velocity: parent.velocity
     running: true
     onLimitReached: {
@@ -60,12 +81,17 @@ EntityBase {
 
 
   function stopMovement() {
-      movement.stop()
+      movement_x.stop()
+      movement_y.stop()
+      spriteSequence.running = false
   }
 
   function startMovement() {
-      movement.start()
+      movement_x.start()
+      movement_y.start()
+      spriteSequence.running = true
   }
+
 
 
 

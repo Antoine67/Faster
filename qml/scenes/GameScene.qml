@@ -17,7 +17,7 @@ SceneBase {
 
     property bool isGameRunning: false
 
-    property int gravityValue : 20
+    property double gravityValue : 0.81
 
     property int player_initial_y: 20;
 
@@ -35,17 +35,8 @@ SceneBase {
        updatesPerSecondForPhysics: 60
 
        velocityIterations: 5
+
        positionIterations: 5
-
-       Rectangle {
-           id: onBreak
-           anchors.fill: scene
-           color: "black"
-           opacity: 0
-           visible: opacity === 0 ? false : true
-           enabled: false
-       }
-
      }
 
 
@@ -55,39 +46,35 @@ SceneBase {
     }
 
 
-    Player {
-        id: character_1
-        resetX: scene.width/2 - size_of_char/2
-        resetY: (480/3) * 2 + player_initial_y // On the top platform
-    }
-
-    Player {
-        id: character_2
-        resetX: scene.width/2 - size_of_char/2
-        resetY: 480/3 + player_initial_y // On the middle platform
-    }
-
-    Player {
-        id: character_3
-        resetX: scene.width/2 - size_of_char/2
-        resetY: 0 + player_initial_y // On the bottom platform
-    }
-
-
-
-    // Manage the 3 platform independately
+    // Manage the 3 player independately on their platforms
     MouseArea {
         id: mouse
           anchors.fill: scene
           onPressed: {
             if(isGameRunning) {
-              if(mouse.y < 160 && level.three_plateform) {
-                  character_3.push()
+                //console.log(mouse.y)
+              let chara
+              //First platform
+              if(mouse.y < 160 ) {
+                  if (!level.two_plateform) return; // If platform is still locked
+                  chara = entityManager.getEntityById("character_3")
+
+              //Second platform
               }else if(mouse.y < 320 ) {
-                  character_2.push()
-              }else if(mouse.y < 480 && level.two_plateform ) {
-                  character_1.push()
+                  chara = entityManager.getEntityById("character_2")
+
+              //Third platform
+              }else if(mouse.y < 480) {
+                  if (!level.three_plateform) return; // If platform is still locked
+                  chara = entityManager.getEntityById("character_1")
+                  //chara.push()
               }
+              let goUp = true
+              if(mouse.y > chara.y)  goUp = false
+
+
+              if(mouse.x < chara.x) chara.pushLeft(goUp)
+              if(mouse.x > chara.x) chara.pushRight(goUp)
             }
           }
       }
@@ -112,7 +99,7 @@ SceneBase {
 
     // how long wait before adding a new obstacle
     function getInterval() {
-        let min_interval = 200
+        let min_interval = 500
         let interval = 2000 - score * 50;
 
         interval = interval < min_interval ? min_interval : interval //Don't go above limit
@@ -127,16 +114,22 @@ SceneBase {
 
         onPlayPressed: {
             scene.state = "wait"
-            console.log("play pressed")
+            ad_interstitial.showInterstitialIfLoaded()
+            ad_interstitial.loadInterstitial()
+        }
+
+        onBackToMenuPressed: {
+           console.log("on menu prssed")
+           exitScene()
         }
       }
 
     // overlay on pause
       BreakScreen {
           id: breakScreen
-          onPlayPressed: state = "play"
+          onPlayPressed: scene.state = "play"
           onBackToMenuPressed: {
-              state = "gameOver"
+              //scene.state = "gameOver"
               exitScene()
           }
       }
@@ -162,7 +155,7 @@ SceneBase {
         anchors.top: parent.top
         anchors.topMargin: 10
         anchors.rightMargin: 10
-        onClicked: { scene.state = "pause"; console.log("pause game"); console.log(scene.state) }
+        onClicked: { scene.state = "pause"; }
     }
 
 
@@ -189,8 +182,9 @@ SceneBase {
     }
 
     function initGame() {
-      level.reset()
-      score = 0
+      level.reset() //Clear all entities, even players
+      setupPlayers()
+      score = 100
     }
 
     function startGame() {
@@ -204,6 +198,9 @@ SceneBase {
 
     function stopGame() {
       level.stop()
+      entityManager.getEntityById("character_1").stop()
+      entityManager.getEntityById("character_2").stop()
+      entityManager.getEntityById("character_3").stop()
       isGameRunning= false
 
     }
@@ -219,9 +216,33 @@ SceneBase {
       }
     }
 
-    function pauseGame() {
 
+    function  setupPlayers() {
+
+        let entityProperties1 = {
+            entityId: "character_1",
+            resetX: scene.width/2 - size_of_char/2,
+            resetY: (480/3) * 2 + player_initial_y // On the top platform
+        }
+
+        let entityProperties2 = {
+            entityId: "character_2",
+            resetX: scene.width/2 - size_of_char/2,
+            resetY: 480/3 + player_initial_y // On the middle platform
+        }
+
+        let entityProperties3 = {
+            entityId: "character_3",
+            resetX: scene.width/2 - size_of_char/2,
+            resetY: 0 + player_initial_y // On the bottom platform
+        }
+
+        //Create 3 players
+        entityManager.createEntityFromUrlWithProperties(Qt.resolvedUrl("../entities/Player.qml"), entityProperties1);
+        entityManager.createEntityFromUrlWithProperties(Qt.resolvedUrl("../entities/Player.qml"), entityProperties2);
+        entityManager.createEntityFromUrlWithProperties(Qt.resolvedUrl("../entities/Player.qml"), entityProperties3);
     }
+
 
       state: "wait"
 
@@ -261,7 +282,6 @@ SceneBase {
         name: "pause"
         PropertyChanges {target: breakScreen; opacity: 1}
         PropertyChanges {target: physicsWorld; gravity: Qt.point(0,0)}
-        PropertyChanges {target: onBreak; opacity: 0.8}
         StateChangeScript {
           script: {
             stopGame()
@@ -269,5 +289,18 @@ SceneBase {
         }
       }
     ]
+
+      AdMobInterstitial {
+        id: ad_interstitial
+        adUnitId: "ca-app-pub-3940256099942544/1033173712" // interstitial test ad by AdMob
+        testDeviceIds: [ "<your-test-device-id>" ]
+
+        onInterstitialReceived: {
+          //showInterstitialIfLoaded()
+        }
+        onPluginLoaded: {
+          loadInterstitial()
+        }
+      }
 
 }

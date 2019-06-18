@@ -66,8 +66,9 @@ DISTFILES += \
     qml/game/Level.qml \
     qml/common/Platform.qml \
     qml/game/GroundCollision.qml \
-    qml/entities/Cow.qml \
     qml/entities/BorderElement.qml \
     qml/game/BreakScreen.qml \
     qml/common/BreakButton.qml \
-    qml/game/LockedElement.qml
+    qml/game/LockedElement.qml \
+    qml/scenes/MenuBreak.qml \
+    qml/entities/Spike.qml

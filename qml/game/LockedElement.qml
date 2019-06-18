@@ -5,17 +5,24 @@ Item {
     z: 100 // Above game
     id: lockedElement
     anchors.fill: parent
+    property string displayText
 
     Rectangle {
-        opacity: 0.9
+        opacity: 1
         color : "black"
         anchors.fill: parent
     }
 
-    MultiResolutionImage {
+    /*MultiResolutionImage {
         source: "../../assets/img/bird_0.png"
         anchors.centerIn: parent
 
+    }*/
+
+    Text {
+        text: qsTr(displayText)
+        anchors.centerIn: parent
+        color: "white"
     }
 
 }

@@ -12,6 +12,7 @@ Item {
   enabled: visible
 
   signal playPressed()
+  signal backToMenuPressed()
 
   MultiResolutionImage {
     source: "../../assets/img/gameOver.png"
@@ -24,13 +25,41 @@ Item {
     id: scoreBoard
     anchors.centerIn: parent
     source: "../../assets/img/scoreBoard.png"
+
+  }
+
+  MouseArea {
+      anchors.fill: scoreBoard
+      onPressed: { /*parent.backToMenuPressed();*/ console.log("clicked")  }
   }
 
 
   Menu {
+    id: menuGameOver
     anchors.top: scoreBoard.bottom
     anchors.topMargin: 15
     onPlayPressed: parent.playPressed()
   }
+
+  AdMobBanner {
+           id: adBanner
+           adUnitId: Constants.admobBannerAdUnitId
+           banner: AdMobBanner.Smart
+
+           anchors.horizontalCenter: parent.horizontalCenter
+           //anchors.bottom: parent.bottom
+            anchors.centerIn: parent
+           testDeviceIds: Constants.admobTestDeviceIds
+           height: 50
+           z: 10000
+           visible: true
+           opacity: 1
+
+           Rectangle {
+               anchors.fill: adBanner
+               color: "red"
+           }
+  }
+
 
 }

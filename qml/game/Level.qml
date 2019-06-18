@@ -6,12 +6,12 @@ import "../common"
 
 Item {
 
-    property var obstacles: [] // Actually cows
-    property int obstaclesCount : 0
 
-    property int y_plateform_1 : 0 //(480/3)*2 //+ ground1.height
-    property int y_plateform_2 : 480/3     + ground2.height
-    property int y_plateform_3 : 0         + ground3.height
+    property int y_plateform_1
+    property int y_plateform_2
+    property int y_plateform_3
+
+    property int obstaclesCount: 0
 
     property bool two_plateform: false
     property bool three_plateform: false
@@ -29,7 +29,21 @@ Item {
       x: scene.gameWindowAnchorItem.x
       width: scene.gameWindowAnchorItem.width
       height: 2
-  }
+    }
+
+    BorderElement {
+      y: scene.gameWindowAnchorItem.y
+      x: 0
+      width: 2
+      height: scene.gameWindowAnchorItem.height
+    }
+
+    BorderElement {
+      y: scene.gameWindowAnchorItem.y
+      x: scene.gameWindowAnchorItem.x-2
+      width: 2
+      height: scene.gameWindowAnchorItem.height
+    }
 
 
 
@@ -49,6 +63,7 @@ Item {
 
         LockedElement {
             id: locked_plat_1
+            displayText: "Too easy ? Ugh.."
         }
 
     }
@@ -80,7 +95,6 @@ Platform {
     Ground {
       id: ground3
       anchors.horizontalCenter: parent.horizontalCenter
-      //y: scene.gameWindowAnchorItem.y+scene.gameWindowAnchorItem.height-height
       anchors.bottom: parent.bottom
       z:10
     }
@@ -92,52 +106,63 @@ Platform {
 
     LockedElement {
         id: locked_plat_3
+        displayText: ""
     }
 
 
 }
 
   function reset() {
-    entityManager.removeAllEntities()
-    obstacles.length = 0;
+    //entityManager.removeAllEntities()
+    entityManager.removeEntitiesByFilter(["spike","player"])
+    two_plateform = false
+    three_plateform = false
+    try {
+        y_plateform_1 = 0 + character_1_stage.height- ground1.height - 20
+        y_plateform_2 = 480/3   + character_2_stage.height - ground2.height - 20
+        y_plateform_3 = (480/3)*2 + character_3_stage.height- ground3.height - 20
+    }catch (e) {console.log(e)}
+
+   locked_plat_1.visible = true
+   locked_plat_3.visible = true
   }
 
   function stop() {
-      //character_1.fallDown(1000)
+      let obstacles = entityManager.getEntityArrayByType("spike")
       for(var i = 0; i < obstacles.length; i++) {
-          obstacles[i].stopMovement()
+          if(obstacles[i] !== null ) obstacles[i].stopMovement()
       }
   }
 
   function start() {
+      let obstacles = entityManager.getEntityArrayByType("spike")
       for(var i = 0; i < obstacles.length; i++) {
-          obstacles[i].startMovement()
+          if(obstacles[i] !== null ) obstacles[i].startMovement()
       }
   }
 
   function gameOver() {
-      console.log("lvel gmov")
-      coll_1.enabled = false
-      coll_1.sleeping = true
-      coll_1.update()
-      coll_1.active = false
+      console.log("level game over")
+
   }
 
   function createObstacle() {
 
       //Unlock plateforms if necessary
       if(score >= 10) {two_plateform = true; locked_plat_1.visible = false}
-      if(score >= 50) {three_plateform = true; locked_plat_3.visible = false }
+      if(score >= 20) {three_plateform = true; locked_plat_3.visible = false }
 
       let entityProperties; let y;
       let random = Math.floor(Math.random() * 10) // between 0 and 9
-      if( random < 7 ) { // 70% of chance to get a flying cow
+
+      if( random < 3 ) { // 30% of chance to get a flying spike
           y = getObstacleHeight(false);
           entityProperties = {
               x: scene.width + 10,
               y: y,
-              velocity: -100,
-              id: "cow"+obstaclesCount,
+              velocity: -50,
+              id: "spike"+obstaclesCount,
+              shouldReversePicture: true,
 
               //Up and down movements
               min_y: y-10,
@@ -148,10 +173,11 @@ Platform {
           entityProperties = {
               x: scene.width + 10,
               y: y,
-              velocity: -120,
-              id: "cow"+obstaclesCount,
+              velocity: -60,
+              id: "spike"+obstaclesCount,
+              shouldReversePicture: true,
 
-              //Cow shouldn't move up and down
+              //Spikes mustn't move up and down
               min_y: y,
               max_y: y
           }
@@ -159,17 +185,13 @@ Platform {
 
       let fromLeft = Math.floor(Math.random() * 2) // between 0 and 1 , 50% of chance to come from left
 
-      if (fromLeft === 0) { // If cows should come from left instead of right by default
+      if (fromLeft === 0) { // If spike should come from left instead of right by default
           entityProperties.x = -10
           entityProperties.velocity = - entityProperties.velocity // velocity must be inversed
+          entityProperties.shouldReversePicture = false
       }
 
-
-
-
-
-      entityManager.createEntityFromUrlWithProperties(Qt.resolvedUrl("../entities/Cow.qml"), entityProperties);
-      obstacles.push(entityManager.getLastAddedEntity())
+      entityManager.createEntityFromUrlWithProperties(Qt.resolvedUrl("../entities/Spike.qml"), entityProperties);
       obstaclesCount++
   }
 
@@ -181,27 +203,21 @@ Platform {
       //Heights of each plateform
       let heights = [y_plateform_2, y_plateform_1, y_plateform_3]
 
-      /*for(var a = 0; a < heights.length; a++) {
-           console.log(heights[a])
-      }*/
       // By default only platform 2 is unlocked
       let max = 1 //Number of readable case in array, only first by default
 
       if(three_plateform) {
-        max = 2
-      }else if(two_plateform){
         max = 3
+      }else if(two_plateform){
+        max = 2
       }
 
 
-      let random = Math.floor(Math.random() * (max - 1))
+      let random = Math.floor(Math.random() * (max))
 
-      random = 0
       let heightToReturn = heights[random]
-      if(groundOnly) max = heightToReturn - 30; // on ground
+      if(!groundOnly) heightToReturn = heightToReturn - 40; // flying
 
       return heightToReturn
   }
-
-
 }

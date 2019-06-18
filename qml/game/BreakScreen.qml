@@ -6,7 +6,8 @@ import "../common"
 Item {
   width: parent.width
   height: parent.height
-  y: -30
+  anchors.top: parent.top
+  //y: -30
   opacity: 0
   visible: opacity === 0 ? false : true
   enabled: visible
@@ -15,9 +16,18 @@ Item {
   signal exitPressed()
   signal backToMenuPressed()
 
+  Rectangle {
+      id: onBreak
+      anchors.fill: parent
+      color: "black"
+  }
+
+
   Text {
       id: name
       text: qsTr("Pause")
+      anchors.top : parent.top
+
   }
 
 
@@ -35,10 +45,13 @@ Item {
   }*/
 
 
-  Menu {
-    anchors.top: parent.bottom
+  MenuBreak {
+    anchors.top: parent.top //parent.bottom
     anchors.topMargin: 15
     onPlayPressed: parent.playPressed()
+    onBackToMenuPressed: parent.backToMenuPressed()
   }
+
+
 
 }

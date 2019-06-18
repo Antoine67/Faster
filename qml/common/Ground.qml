@@ -25,7 +25,7 @@ EntityBase {
 
   MultiResolutionImage {
     id: spriteSequence
-    source: "../../assets/img/landSprite.png"
+    source: "../../assets/img/land.png"
     anchors.fill: parent
   }
 

@@ -6,7 +6,8 @@ EntityBase {
   id: player
   entityType: "player"
 
-  property real upwardforce: -280
+  property real upwardforce: -50
+  property real sideforce: 30
   property int resetX: 0
   property int resetY: 0
 
@@ -21,7 +22,7 @@ EntityBase {
     spriteSequence.running = false
   }
 
-  SpriteSequence {
+ /*SpriteSequence {
     id: spriteSequence
 
     anchors.centerIn: parent
@@ -35,8 +36,17 @@ EntityBase {
       frameHeight: 24
       source: "../../assets/img/birdSprite.png"
     }
-    //rotation: wabbleX.running ? 0 : collider.linearVelocity.y/10
     rotation: collider.linearVelocity.y/10
+  }*/
+
+  MultiResolutionImage {
+      id: spriteSequence
+
+      anchors.centerIn: parent
+      source: "../../assets/img/ballon.png"
+
+      rotation: collider.linearVelocity.y/10
+
   }
 
   CircleCollider {
@@ -49,34 +59,37 @@ EntityBase {
   function reset() {
     player.x = resetX
     player.y = resetY
-    //collider.body.linearVelocity = Qt.point(0,0)
-    //activateWabbling()
-    spriteSequence.running = true
+    collider.body.linearVelocity = Qt.point(0,0)
   }
 
   function push() {
-    //wabbleX.stop()
-    //wabbleY.stop()
     //audioManager.play(audioManager.idWING)
     collider.body.linearVelocity = Qt.point(0,0)
     var localForwardVector = collider.body.toWorldVector(Qt.point(0, upwardforce));
     collider.body.applyLinearImpulse(localForwardVector, collider.body.getWorldCenter());
   }
 
-  /*NumberAnimation on x {running: false; id: wabbleX; duration: 4000; loops: Animation.Infinite; easing.type: Easing.CosineCurve}
-  NumberAnimation on y {running: false; id: wabbleY; duration: 4000; loops: Animation.Infinite; easing.type: Easing.SineCurve}
+  function pushLeft(goUp) {
+      //audioManager.play(audioManager.idWING)
+      let forceUp = 0
+      if(goUp) forceUp = upwardforce
 
-  function activateWabbling() {
-    var wableVal = 25
-    var rand = Math.random()
-    var dir = (rand < 0.5 ? -wableVal/4*rand : wableVal/4*rand )
-    wabbleX.from = player.x+dir
-    wabbleX.to = player.x-dir
-    wabbleX.start()
-    rand = Math.random()
-    dir = (rand < 0.5 ? -wableVal*rand : wableVal*rand )
-    wabbleY.from = player.y+dir
-    wabbleY.to = player.y-dir
-    wabbleY.start()
-  }*/
+      collider.body.linearVelocity = Qt.point(0,0)
+      var localForwardVector = collider.body.toWorldVector(Qt.point(-sideforce, forceUp));
+      collider.body.applyLinearImpulse(localForwardVector, collider.body.getWorldCenter());
+  }
+
+  function pushRight(goUp) {
+      let forceUp = 0
+      if(goUp) forceUp = upwardforce
+
+      collider.body.linearVelocity = Qt.point(0,0)
+      var localForwardVector = collider.body.toWorldVector(Qt.point(sideforce, forceUp));
+      collider.body.applyLinearImpulse(localForwardVector, collider.body.getWorldCenter());
+  }
+
+  function stop() {
+
+  }
+
 }
