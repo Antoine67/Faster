@@ -7,9 +7,13 @@ EntityBase {
   entityType: "player"
 
   property real upwardforce: -50
-  property real sideforce: 30
+  property real sideforce: 50
   property int resetX: 0
   property int resetY: 0
+
+  property string balloonName :"ballon"
+
+  property point velocityBeforePause : Qt.point(0,-1)
 
   width: collider.radius * 2
   height: collider.radius * 2
@@ -22,28 +26,12 @@ EntityBase {
     spriteSequence.running = false
   }
 
- /*SpriteSequence {
-    id: spriteSequence
-
-    anchors.centerIn: parent
-
-    Sprite {
-      name: "idle"
-      frameCount: 3
-      frameRate: 10
-
-      frameWidth: 34
-      frameHeight: 24
-      source: "../../assets/img/birdSprite.png"
-    }
-    rotation: collider.linearVelocity.y/10
-  }*/
 
   MultiResolutionImage {
       id: spriteSequence
 
       anchors.centerIn: parent
-      source: "../../assets/img/ballon.png"
+      source: "../../assets/img/"+balloonName
 
       rotation: collider.linearVelocity.y/10
 
@@ -52,8 +40,34 @@ EntityBase {
   CircleCollider {
     id: collider
 
+    property point target //:  Qt.point(-200, -200)
+
+    friction: 2
+
     radius: spriteSequence.height/2
     bodyType: Body.Dynamic
+
+    function slowPlayer() {
+        if(!target ) return;
+
+        if( Math.abs(getRealX() - target.x) < 5 && Math.abs(getRealY() - target.y) < 5 )
+        body.linearVelocity = getVelocity(target, Qt.point(getRealX(), getRealY())); return;
+    }
+  }
+
+
+  function getVelocity (target, player) {
+      let minVelocity = 0
+      let maxVelocity = 100
+
+      let vector = Qt.point(target.x - player.x,
+                            target.y - player.y)
+
+      vector.x = limitVelocity(vector.x, minVelocity, maxVelocity)
+      vector.y = limitVelocity(vector.y, minVelocity, maxVelocity)
+
+      return vector
+
   }
 
   function reset() {
@@ -69,27 +83,77 @@ EntityBase {
     collider.body.applyLinearImpulse(localForwardVector, collider.body.getWorldCenter());
   }
 
-  function pushLeft(goUp) {
-      //audioManager.play(audioManager.idWING)
-      let forceUp = 0
-      if(goUp) forceUp = upwardforce
+
+  function pushInDirection(dir) {
+      let vector = Qt.point(dir.x - getRealX(),
+                            dir.y - getRealY())
+
 
       collider.body.linearVelocity = Qt.point(0,0)
-      var localForwardVector = collider.body.toWorldVector(Qt.point(-sideforce, forceUp));
+      var localForwardVector = collider.body.toWorldVector(vector);
       collider.body.applyLinearImpulse(localForwardVector, collider.body.getWorldCenter());
+
+      collider.target.x = dir.x
+      collider.target.y = dir.y
+
+      console.log(getRealX(), getRealY(),"target", collider.target, vector)
+
+      //audioManager.play(audioManager.idWING)
   }
 
-  function pushRight(goUp) {
-      let forceUp = 0
-      if(goUp) forceUp = upwardforce
 
-      collider.body.linearVelocity = Qt.point(0,0)
-      var localForwardVector = collider.body.toWorldVector(Qt.point(sideforce, forceUp));
-      collider.body.applyLinearImpulse(localForwardVector, collider.body.getWorldCenter());
+
+  Timer {
+       id: timerSlow // after the game initialization is complete we start the timer manually using the id
+       interval: 50
+       repeat: true
+       onTriggered: {
+        collider.slowPlayer()
+       }
+  }
+
+
+  function limitVelocity(el, min, max) {
+
+     // Negative velocity
+    if (el < 0) {
+        if(el + min > 0) { el = -min } // Not fast enough
+        else if(el + max < 0)  { el = -max } // Too fast
+
+    // Same for positive velocity
+    }else {
+        if(el - min < 0) { el = min }
+        else if(el - max > 0)  { el = max }
+    }
+    return el
   }
 
   function stop() {
 
+    velocityBeforePause = Qt.point(collider.body.linearVelocity.x, collider.body.linearVelocity.y)
+    console.log("before",velocityBeforePause)
+
+    collider.body.linearVelocity = Qt.point(0,0)
+
+    timerSlow.stop()
+  }
+
+  function start() {
+      console.log(velocityBeforePause)
+      if (velocityBeforePause) collider.body.linearVelocity = velocityBeforePause
+      timerSlow.start()
+  }
+
+  function getRealX() {
+    return x + player.width/2
+  }
+
+  function getRealY() {
+    return y + player.height/2
+  }
+
+  function fall() {
+       collider.body.applyLinearImpulse(Qt.point(0, 10), collider.body.getWorldCenter());
   }
 
 }

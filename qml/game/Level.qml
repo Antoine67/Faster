@@ -10,11 +10,19 @@ Item {
     property int y_plateform_1
     property int y_plateform_2
     property int y_plateform_3
+    property double heightPlatform
+    property double spikeHeight : 31
 
     property int obstaclesCount: 0
 
     property bool two_plateform: false
     property bool three_plateform: false
+
+    //Players
+    property var p1
+    property var p2
+    property var p3
+
 
 
     BorderElement {
@@ -40,7 +48,7 @@ Item {
 
     BorderElement {
       y: scene.gameWindowAnchorItem.y
-      x: scene.gameWindowAnchorItem.x-2
+      x: scene.gameWindowAnchorItem.width
       width: 2
       height: scene.gameWindowAnchorItem.height
     }
@@ -118,6 +126,7 @@ Platform {
     two_plateform = false
     three_plateform = false
     try {
+        heightPlatform = character_1_stage.height- ground1.height
         y_plateform_1 = 0 + character_1_stage.height- ground1.height - 20
         y_plateform_2 = 480/3   + character_2_stage.height - ground2.height - 20
         y_plateform_3 = (480/3)*2 + character_3_stage.height- ground3.height - 20
@@ -149,8 +158,16 @@ Platform {
   function createObstacle() {
 
       //Unlock plateforms if necessary
-      if(score >= 10) {two_plateform = true; locked_plat_1.visible = false}
-      if(score >= 20) {three_plateform = true; locked_plat_3.visible = false }
+      if(score >= 10) {
+          two_plateform = true
+          locked_plat_1.visible = false
+          showPlayer(p3)
+      }
+      if(score >= 20) {
+          three_plateform = true
+          locked_plat_3.visible = false
+          showPlayer(p1)
+      }
 
       let entityProperties; let y;
       let random = Math.floor(Math.random() * 10) // between 0 and 9
@@ -201,7 +218,9 @@ Platform {
   function getObstacleHeight(groundOnly) {
 
       //Heights of each plateform
-      let heights = [y_plateform_2, y_plateform_1, y_plateform_3]
+      let heights = [{min: y_plateform_2, max: y_plateform_2 - heightPlatform + spikeHeight},
+                     {min: y_plateform_1, max: y_plateform_1 - heightPlatform + spikeHeight},
+                     {min: y_plateform_3, max: y_plateform_3 - heightPlatform + spikeHeight}]
 
       // By default only platform 2 is unlocked
       let max = 1 //Number of readable case in array, only first by default
@@ -218,6 +237,23 @@ Platform {
       let heightToReturn = heights[random]
       if(!groundOnly) heightToReturn = heightToReturn - 40; // flying
 
-      return heightToReturn
+      return Math.floor(Math.random()*(heightToReturn.max - heightToReturn.min +1)+heightToReturn.min);
+      //return
   }
+
+  function setPlayers(player1, player2, player3) {
+    p1 = player1
+    p2 = player2
+    p3 = player3
+
+  }
+
+  function hideUnnecessaryPlayers() {
+      p1.visible = false
+      p3.visible = false
+  }
+
+  function showPlayer(player) { player.visible = true}
+
+
 }

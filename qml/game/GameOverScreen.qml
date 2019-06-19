@@ -14,6 +14,13 @@ Item {
   signal playPressed()
   signal backToMenuPressed()
 
+  Rectangle {
+      id: onBreak
+      anchors.fill: parent
+      color: "black"
+      opacity: 0.5
+  }
+
   MultiResolutionImage {
     source: "../../assets/img/gameOver.png"
     anchors.bottom: scoreBoard.top
@@ -28,28 +35,24 @@ Item {
 
   }
 
-  MouseArea {
-      anchors.fill: scoreBoard
-      onPressed: { /*parent.backToMenuPressed();*/ console.log("clicked")  }
-  }
 
-
-  Menu {
+  MenuGameOver {
     id: menuGameOver
     anchors.top: scoreBoard.bottom
     anchors.topMargin: 15
     onPlayPressed: parent.playPressed()
+    onBackToMenuPressed: parent.backToMenuPressed()
   }
 
   AdMobBanner {
            id: adBanner
-           adUnitId: Constants.admobBannerAdUnitId
+           adUnitId: "ca-app-pub-3940256099942544/6300978111"
            banner: AdMobBanner.Smart
 
            anchors.horizontalCenter: parent.horizontalCenter
            //anchors.bottom: parent.bottom
-            anchors.centerIn: parent
-           testDeviceIds: Constants.admobTestDeviceIds
+           //anchors.centerIn: parent
+           testDeviceIds: [ "<a testdevice id>" ]
            height: 50
            z: 10000
            visible: true

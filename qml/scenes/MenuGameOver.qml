@@ -3,18 +3,18 @@ import QtQuick 2.0
 
 Row {
   signal playPressed()
+  signal shopPressed()
   signal backToMenuPressed()
 
   spacing: 18
   anchors.horizontalCenter: parent.horizontalCenter
-
   height: menuItem.height
 
   //Launch game
   ImageButton {
     id: menuItem
     onClicked: {
-      parent.playPressed()
+      playPressed()
     }
     source: "../../assets/img/playAgain.png"
   }
@@ -22,7 +22,7 @@ Row {
   //Shop
   ImageButton {
     onClicked: {
-      parent.backToMenuPressed()
+      backToMenuPressed()
     }
     source: "../../assets/img/backToMenu.png"
   }

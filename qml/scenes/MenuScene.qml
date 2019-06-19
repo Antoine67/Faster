@@ -9,22 +9,27 @@ SceneBase {
   signal gamePressed()
   signal shopPressed()
 
-  Player {
-    x: scene.gameWindowAnchorItem.width/2
-    y: scene.gameWindowAnchorItem.height/2
-    resetX: scene.gameWindowAnchorItem.width/2;
-    resetY: scene.gameWindowAnchorItem.height/2
+
+  Background {
+
   }
+
+
+
 
   MultiResolutionImage {
     anchors.top: parent.top
     anchors.topMargin: 60
-    anchors.horizontalCenter: scene.gameWindowAnchorItem.horizontalCenter
+    //anchors.horizontalCenter: parent
     source: "../../assets/img/logo.png"
+
+    width: parent.width
+    height: width * 0.38146551724 //proportion
   }
 
 
   Menu {
+    anchors.centerIn: parent
     onShopPressed: parent.shopPressed()
     onPlayPressed: gamePressed()
   }
@@ -32,5 +37,6 @@ SceneBase {
   onEnterPressed: {
     gamePressed()
   }
+
 
 }

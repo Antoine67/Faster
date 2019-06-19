@@ -43,7 +43,10 @@ EntityBase {
 
   BoxCollider {
      id: collider
-     anchors.fill: spriteSequence
+     //anchors.fill: spriteSequence
+     anchors.centerIn: spriteSequence
+     height: 20
+     width: spriteSequence.width
      bodyType: Body.Kinematic
      collisionTestingOnlyMode: true
      fixture.onBeginContact: {

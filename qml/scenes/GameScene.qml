@@ -13,11 +13,13 @@ SceneBase {
     signal shopPressed()
     signal useCoinsPressed()
 
+    property bool levelStarted : false
+
     property int score: 0
 
     property bool isGameRunning: false
 
-    property double gravityValue : 0.81
+    property double gravityValue : 0.01
 
     property int player_initial_y: 20;
 
@@ -28,7 +30,7 @@ SceneBase {
 
     PhysicsWorld {
        id: physicsWorld
-       debugDrawVisible: true // physics debug overlay
+       debugDrawVisible: false // physics debug overlay
        z: 1000 // on top of everything else
        gravity.y: gravityValue // 9.81 would be earth-like gravity
 
@@ -52,8 +54,8 @@ SceneBase {
           anchors.fill: scene
           onPressed: {
             if(isGameRunning) {
-                //console.log(mouse.y)
               let chara
+
               //First platform
               if(mouse.y < 160 ) {
                   if (!level.two_plateform) return; // If platform is still locked
@@ -67,17 +69,13 @@ SceneBase {
               }else if(mouse.y < 480) {
                   if (!level.three_plateform) return; // If platform is still locked
                   chara = entityManager.getEntityById("character_1")
-                  //chara.push()
               }
-              let goUp = true
-              if(mouse.y > chara.y)  goUp = false
 
-
-              if(mouse.x < chara.x) chara.pushLeft(goUp)
-              if(mouse.x > chara.x) chara.pushRight(goUp)
+                chara.pushInDirection(Qt.point(mouse.x, mouse.y) )
             }
           }
       }
+
 
 
     EntityManager {
@@ -100,7 +98,7 @@ SceneBase {
     // how long wait before adding a new obstacle
     function getInterval() {
         let min_interval = 500
-        let interval = 2000 - score * 50;
+        let interval = 2000 - score * 5;
 
         interval = interval < min_interval ? min_interval : interval //Don't go above limit
         return interval
@@ -110,6 +108,7 @@ SceneBase {
 
     // overlay on game over
       GameOverScreen {
+        z: 400
         id: gameOverStats
 
         onPlayPressed: {
@@ -126,6 +125,7 @@ SceneBase {
 
     // overlay on pause
       BreakScreen {
+          z: 400
           id: breakScreen
           onPlayPressed: scene.state = "play"
           onBackToMenuPressed: {
@@ -184,16 +184,39 @@ SceneBase {
     function initGame() {
       level.reset() //Clear all entities, even players
       setupPlayers()
-      score = 100
+
+      //Inform level of existing players
+      level.setPlayers(entityManager.getEntityById("character_1"),
+                       entityManager.getEntityById("character_2"),
+                       entityManager.getEntityById("character_3"))
+
+      //Hide players on locked platforms
+      level.hideUnnecessaryPlayers()
+
+      score = 0
+      levelStarted = false
     }
 
     function startGame() {
+
       level.start()
       isGameRunning = true
       scene.state = "play"
-      physicsWorld.update() // Characters should fall
+
+
+      entityManager.getEntityById("character_1").start()
+      entityManager.getEntityById("character_2").start()
+      entityManager.getEntityById("character_3").start()
+
+      if( levelStarted === false ) {
+          entityManager.getEntityById("character_1").fall()
+          entityManager.getEntityById("character_2").fall()
+          entityManager.getEntityById("character_3").fall()
+      }
+
 
       createObstacles.start()
+      levelStarted  = true
     }
 
     function stopGame() {
@@ -201,12 +224,12 @@ SceneBase {
       entityManager.getEntityById("character_1").stop()
       entityManager.getEntityById("character_2").stop()
       entityManager.getEntityById("character_3").stop()
-      isGameRunning= false
+      isGameRunning = false
 
     }
 
     function gameOver() {
-      if(state === "gameOver") return; //Already game over !
+      //if(state === "gameOver") return; //Already game over !
       stopGame()
       scene.state = "gameOver"
       level.gameOver()
@@ -271,7 +294,7 @@ SceneBase {
         State {
           name: "gameOver"
           PropertyChanges {target: gameOverStats; opacity: 1}
-          PropertyChanges {target: physicsWorld; gravity: Qt.point(0,gravityValue*3)}
+          PropertyChanges {target: physicsWorld; gravity: Qt.point(0,0)}
           StateChangeScript {
             script: {
               gameOver()

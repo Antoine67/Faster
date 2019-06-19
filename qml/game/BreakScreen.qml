@@ -20,6 +20,7 @@ Item {
       id: onBreak
       anchors.fill: parent
       color: "black"
+      opacity: 0.5
   }
 
 
@@ -30,7 +31,7 @@ Item {
 
   }
 
-
+/*
   MultiResolutionImage {
     source: "../../assets/img/gameOver.png"
     anchors.bottom: parent.top
@@ -38,7 +39,7 @@ Item {
     anchors.bottomMargin: 30
   }
 
-  /*MultiResolutionImage {
+  MultiResolutionImage {
     id: scoreBoard
     anchors.centerIn: parent
     source: "../../assets/img/scoreBoard.png"
@@ -46,8 +47,7 @@ Item {
 
 
   MenuBreak {
-    anchors.top: parent.top //parent.bottom
-    anchors.topMargin: 15
+    anchors.centerIn: parent
     onPlayPressed: parent.playPressed()
     onBackToMenuPressed: parent.backToMenuPressed()
   }

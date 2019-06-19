@@ -24,6 +24,6 @@ Row {
     onClicked: {
       shopPressed()
     }
-    source: "../../assets/img/scores.png"
+    source: "../../assets/img/shopButton.png"
   }
 }

@@ -71,4 +71,5 @@ DISTFILES += \
     qml/common/BreakButton.qml \
     qml/game/LockedElement.qml \
     qml/scenes/MenuBreak.qml \
-    qml/entities/Spike.qml
+    qml/entities/Spike.qml \
+    qml/scenes/MenuGameOver.qml
