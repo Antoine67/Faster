@@ -2,6 +2,7 @@ import Felgo 3.0
 import QtQuick 2.0
 import "../scenes"
 import "../common"
+import "../helper"
 
 Item {
   width: parent.width
@@ -46,13 +47,13 @@ Item {
 
   AdMobBanner {
            id: adBanner
-           adUnitId: "ca-app-pub-3940256099942544/6300978111"
+           adUnitId: Constants.admobBannerAdUnitId
            banner: AdMobBanner.Smart
 
            anchors.horizontalCenter: parent.horizontalCenter
            //anchors.bottom: parent.bottom
            //anchors.centerIn: parent
-           testDeviceIds: [ "<a testdevice id>" ]
+           testDeviceIds: Constants.admobTestDeviceIds
            height: 50
            z: 10000
            visible: true

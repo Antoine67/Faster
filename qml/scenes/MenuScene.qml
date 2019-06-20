@@ -15,8 +15,6 @@ SceneBase {
   }
 
 
-
-
   MultiResolutionImage {
     anchors.top: parent.top
     anchors.topMargin: 60

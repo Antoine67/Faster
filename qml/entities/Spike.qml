@@ -22,6 +22,12 @@ EntityBase {
 
   }*/
 
+
+  //Access to local storage
+  Storage {
+    id: storage
+  }
+
   SpriteSequence {
      id: spriteSequence
      mirrorX: shouldReversePicture
@@ -31,12 +37,12 @@ EntityBase {
      Sprite {
        name: "spike_img"
        id: spike_img
-       frameCount: 3
+       frameCount: 6
        frameRate: 10
 
        frameWidth: 32
        frameHeight: 31
-       source: "../../assets/img/bird.png"
+       source: "../../assets/img/"+ storage.getValue("enemySkin")+".png"
      }
      //rotation: collider.linearVelocity.y/10
    }

@@ -25,6 +25,7 @@ Item {
 
 
 
+
     BorderElement {
       x: scene.gameWindowAnchorItem.x
       y: scene.gameWindowAnchorItem.y-20
@@ -71,7 +72,7 @@ Item {
 
         LockedElement {
             id: locked_plat_1
-            displayText: "Too easy ? Ugh.."
+            displayText: "Too easy ? Wait for it..."
         }
 
     }
@@ -172,8 +173,8 @@ Platform {
       let entityProperties; let y;
       let random = Math.floor(Math.random() * 10) // between 0 and 9
 
-      if( random < 3 ) { // 30% of chance to get a flying spike
-          y = getObstacleHeight(false);
+      if( random < 3 ) { // 30% of chance to get a moving spike (up/down)
+          y = getObstacleHeight();
           entityProperties = {
               x: scene.width + 10,
               y: y,
@@ -186,7 +187,7 @@ Platform {
               max_y: y+10
           }
       }else {
-          y = getObstacleHeight(true); // Ground only
+          y = getObstacleHeight();
           entityProperties = {
               x: scene.width + 10,
               y: y,
@@ -215,7 +216,7 @@ Platform {
 
 
 
-  function getObstacleHeight(groundOnly) {
+  function getObstacleHeight() {
 
       //Heights of each plateform
       let heights = [{min: y_plateform_2, max: y_plateform_2 - heightPlatform + spikeHeight},
@@ -235,10 +236,10 @@ Platform {
       let random = Math.floor(Math.random() * (max))
 
       let heightToReturn = heights[random]
-      if(!groundOnly) heightToReturn = heightToReturn - 40; // flying
+      heightToReturn = Math.floor(Math.random()*(heightToReturn.max - heightToReturn.min +1)+heightToReturn.min)
 
-      return Math.floor(Math.random()*(heightToReturn.max - heightToReturn.min +1)+heightToReturn.min);
-      //return
+      console.log(heightToReturn, random)
+      return heightToReturn
   }
 
   function setPlayers(player1, player2, player3) {

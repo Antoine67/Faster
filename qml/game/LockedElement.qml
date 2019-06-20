@@ -8,7 +8,7 @@ Item {
     property string displayText
 
     Rectangle {
-        opacity: 1
+        opacity: 0.8
         color : "black"
         anchors.fill: parent
     }

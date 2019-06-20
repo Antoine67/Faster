@@ -11,7 +11,7 @@ EntityBase {
   property int resetX: 0
   property int resetY: 0
 
-  property string balloonName :"ballon"
+  property string balloonName : storage.getValue("playerSkin")
 
   property point velocityBeforePause : Qt.point(0,-1)
 
@@ -24,6 +24,11 @@ EntityBase {
 
   onGameOver: {
     spriteSequence.running = false
+  }
+
+  //Access to local storage
+  Storage {
+    id: storage
   }
 
 
@@ -96,8 +101,6 @@ EntityBase {
       collider.target.x = dir.x
       collider.target.y = dir.y
 
-      console.log(getRealX(), getRealY(),"target", collider.target, vector)
-
       //audioManager.play(audioManager.idWING)
   }
 
@@ -131,7 +134,6 @@ EntityBase {
   function stop() {
 
     velocityBeforePause = Qt.point(collider.body.linearVelocity.x, collider.body.linearVelocity.y)
-    console.log("before",velocityBeforePause)
 
     collider.body.linearVelocity = Qt.point(0,0)
 
@@ -139,7 +141,6 @@ EntityBase {
   }
 
   function start() {
-      console.log(velocityBeforePause)
       if (velocityBeforePause) collider.body.linearVelocity = velocityBeforePause
       timerSlow.start()
   }

@@ -31,7 +31,8 @@ Item {
     }
 
     onBackButtonPressed: {
-      nativeUtils.displayMessageBox("Really quit the game?", "", 2);
+      nativeUtils.displayMessageBox("Really quit the game?", "", 2)
+
     }
 
     /*Connections {

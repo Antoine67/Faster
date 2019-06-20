@@ -4,7 +4,6 @@ import QtQuick 2.0
 Row {
   signal playPressed()
   signal shopPressed()
-  signal backToMenu
 
   spacing: 18
   anchors.horizontalCenter: parent.horizontalCenter

@@ -27,6 +27,10 @@ SceneBase {
 
 
 
+    //Access to local storage
+    Storage {
+      id: storage
+    }
 
     PhysicsWorld {
        id: physicsWorld
@@ -41,6 +45,11 @@ SceneBase {
        positionIterations: 5
      }
 
+
+    MultiResolutionImage {
+      id: bg
+      source: "../../assets/img/bg.png"
+    }
 
 
     Level {
@@ -97,8 +106,8 @@ SceneBase {
 
     // how long wait before adding a new obstacle
     function getInterval() {
-        let min_interval = 500
-        let interval = 2000 - score * 5;
+        let min_interval = 300
+        let interval = 2000 - score * 50;
 
         interval = interval < min_interval ? min_interval : interval //Don't go above limit
         return interval
@@ -136,8 +145,9 @@ SceneBase {
 
 
 
-    // score / back to menu
+    // score
     Text {
+       color: "white"
        id: score_displayer
        text: score
        anchors.right: parent.right
@@ -163,6 +173,7 @@ SceneBase {
     // get-ready screen
     WaitScreen {
       id: waitToPlay
+      z: 100
       onClicked: {
         scene.state = "play"
       }
@@ -229,7 +240,6 @@ SceneBase {
     }
 
     function gameOver() {
-      //if(state === "gameOver") return; //Already game over !
       stopGame()
       scene.state = "gameOver"
       level.gameOver()
@@ -245,19 +255,19 @@ SceneBase {
         let entityProperties1 = {
             entityId: "character_1",
             resetX: scene.width/2 - size_of_char/2,
-            resetY: (480/3) * 2 + player_initial_y // On the top platform
+            resetY: (480/3) * 2 + player_initial_y, // On the top platform
         }
 
         let entityProperties2 = {
             entityId: "character_2",
             resetX: scene.width/2 - size_of_char/2,
-            resetY: 480/3 + player_initial_y // On the middle platform
+            resetY: 480/3 + player_initial_y, // On the middle platform
         }
 
         let entityProperties3 = {
             entityId: "character_3",
             resetX: scene.width/2 - size_of_char/2,
-            resetY: 0 + player_initial_y // On the bottom platform
+            resetY: 0 + player_initial_y, // On the bottom platform
         }
 
         //Create 3 players

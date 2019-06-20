@@ -7,10 +7,7 @@ Item {
     width: 320
     height: 480/3
 
-    MultiResolutionImage {
-      id: bg
-      source: "../../assets/img/bg.png"
-    }
+
 
     Ground {
       anchors.horizontalCenter: parent.horizontalCenter

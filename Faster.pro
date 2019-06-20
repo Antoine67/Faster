@@ -72,4 +72,5 @@ DISTFILES += \
     qml/game/LockedElement.qml \
     qml/scenes/MenuBreak.qml \
     qml/entities/Spike.qml \
-    qml/scenes/MenuGameOver.qml
+    qml/scenes/MenuGameOver.qml \
+    qml/common/ImageRadioButton.qml
