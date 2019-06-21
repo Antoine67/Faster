@@ -56,6 +56,7 @@ EntityBase {
      bodyType: Body.Kinematic
      collisionTestingOnlyMode: true
      fixture.onBeginContact: {
+           audioManager.play(audioManager.idBALLOON_EXPLODED)
            scene.gameOver()
      }
   }

@@ -12,34 +12,52 @@ Item {
 
 
   }
+
   Player {
-    id: balloon4
-    x: scene.gameWindowAnchorItem.width/2 - balloon4.width/2
-    y: scene.gameWindowAnchorItem.height*0.8
-    resetX: scene.gameWindowAnchorItem.width/2 - balloon4.width/2
-    resetY: scene.gameWindowAnchorItem.height*0.8
-    balloonName: "ballon4"
-  }
-/*
-  MovementAnimation {
-    target: balloon4
-    property: "x"
-    velocity: 10
-    running: true
-    minPropertyValue: -100
-    maxPropertyValue: 100
-    acceleration: 0
+    id: balloon
+    x: 50
+    y: 350
+    resetX: 50
+    resetY:  350
+    balloonName: "ballon"
   }
 
-  MovementAnimation {
-    target: balloon4
-    property: "y"
-    velocity: 10
-    running: true
-    minPropertyValue: -100
-    maxPropertyValue: 100
-    acceleration: 0
-  }*/
+  Player {
+    id: balloon2
+    x: 130
+    y: 320
+    resetX: 130
+    resetY: 320
+    balloonName: "ballon2"
+  }
+
+  Player {
+    id: balloon3
+    x: 150
+    y: 370
+    resetX: 150
+    resetY: 370
+    balloonName: "ballon3"
+  }
+
+  Player {
+    id: balloon4
+    x: 190
+    y: 355
+    resetX: 170
+    resetY: 355
+    balloonName: "ballon4"
+  }
+
+
+
+
+  function start() {
+      balloon.activateWabbling()
+      balloon2.activateWabbling()
+      balloon3.activateWabbling()
+      balloon4.activateWabbling()
+  }
 
 
 }

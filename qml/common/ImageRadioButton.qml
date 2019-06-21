@@ -6,24 +6,20 @@ Quick2.RadioButton {
   id: radioButton
   implicitWidth: leftPadding + indicator.implicitWidth + spacing + contentItem.implicitWidth + rightPadding
   implicitHeight: topPadding + indicator.implicitHeight + bottomPadding
-  topPadding: 0
-  bottomPadding: 0
-  leftPadding: 0
-  rightPadding: 0
+  topPadding: 10
+  bottomPadding: 10
+  leftPadding: 10
+  rightPadding: 5
 
-  //pressed: onUserClick()
   onCheckedChanged: {
-    if (checked) {
-        onUserClick()
-    }
+    if (checked) { onUserClick() } //onUserClick setup in ShopScene
   }
-
 
 
   property string img : "undefined"
   property string sprite : "undefined"
 
-  property var onUserClick : function() { console.log("not defined yet")}
+  property var onUserClick : function() { /* Default empty */}
 
   // overwrite style for density-independent sizes
   contentItem: AppText {
@@ -33,8 +29,18 @@ Quick2.RadioButton {
     anchors.leftMargin: parent.indicator.width + parent.indicator.x + parent.spacing
   }
 
+  //Border around image on check
+  Rectangle {
+    anchors.centerIn: parent
+    implicitWidth: parent.width
+    implicitHeight: parent.height
+    radius: 100
 
-
+    color: visible ? "white" : "transparent"
+    visible: radioButton.checked
+    opacity: 0.6
+    z: 5
+  }
 
 
   indicator: Item {
@@ -42,32 +48,22 @@ Quick2.RadioButton {
     implicitHeight: implicitWidth
     x: parent.leftPadding
     y: parent.height / 2 - height / 2
-    Rectangle {
+    z: 10
 
-      anchors.centerIn: parent
-      implicitWidth: parent.width
-      implicitHeight: parent.height
-      radius: 0
-      border.color: radioButton.checked ? Theme.tintColor : Theme.secondaryTextColor
-      border.width: 1
-      color: "transparent"
-      visible: radioButton.checked
-      z: 5
-    }
-
+    //Display image or sprite over the radio button
     MultiResolutionImage {
 
         visible: img !== "undefined"
-
         source: img !== "undefined" ? "../../assets/img/" + img + ".png" : "../../assets/img/ballon.png"
+
         width: 30
         height: 31
         anchors.centerIn: parent
-        z: 10
+
     }
 
     SpriteSequence {
-        z: 10
+
        id: spriteSequence
 
        visible: sprite !== "undefined"
@@ -90,7 +86,6 @@ Quick2.RadioButton {
 
        }
      }
-
   }
 
 

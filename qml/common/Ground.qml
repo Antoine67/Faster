@@ -7,7 +7,7 @@ EntityBase {
   entityType: "box"
 
   width: parent.width
-  height: spriteSequence.height
+  height: 20// spriteSequence.height
 
   /*SpriteSequence {
     id: spriteSequence

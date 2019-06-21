@@ -41,7 +41,7 @@ EntityBase {
       rotation: collider.linearVelocity.y/10
 
   }
-
+/*
   CircleCollider {
     id: collider
 
@@ -59,6 +59,37 @@ EntityBase {
         body.linearVelocity = getVelocity(target, Qt.point(getRealX(), getRealY())); return;
     }
   }
+  */
+
+  PolygonCollider {
+      id: collider
+
+      property point target //:  Qt.point(-200, -200)
+      bodyType: Body.Dynamic
+
+      friction: 2
+
+      property int decX : -spriteSequence.width/2
+      property int decY : -spriteSequence.height/2
+
+        vertices: [
+          Qt.point(14 + decX, 0 + decY),
+          Qt.point(22 + decX, 3 + decY),
+          Qt.point(26 + decX, 12 + decY),
+          Qt.point(19 + decX, 25 + decY),
+          Qt.point(15 + decX, 29 + decY),
+          Qt.point(10 + decX, 25 + decY),
+          Qt.point(3 + decX, 12 + decY),
+          Qt.point(7 + decX, 3 + decY),
+        ]
+    function slowPlayer() {
+        if(!target ) return;
+
+        if( Math.abs(getRealX() - target.x) < 5 && Math.abs(getRealY() - target.y) < 5 )
+        body.linearVelocity = getVelocity(target, Qt.point(getRealX(), getRealY())); return;
+    }
+  }
+
 
 
   function getVelocity (target, player) {
@@ -101,7 +132,7 @@ EntityBase {
       collider.target.x = dir.x
       collider.target.y = dir.y
 
-      //audioManager.play(audioManager.idWING)
+      audioManager.play(audioManager.idBALLOON_PUSHED)
   }
 
 
@@ -155,6 +186,26 @@ EntityBase {
 
   function fall() {
        collider.body.applyLinearImpulse(Qt.point(0, 10), collider.body.getWorldCenter());
+  }
+
+
+
+  NumberAnimation on x {running: false; id: wabbleX; duration: 4000; loops: Animation.Infinite; easing.type: Easing.CosineCurve}
+  NumberAnimation on y {running: false; id: wabbleY; duration: 4000; loops: Animation.Infinite; easing.type: Easing.SineCurve}
+
+
+  function activateWabbling() {
+      var wableVal = 25
+      var rand = Math.random()
+      var dir = (rand < 0.5 ? -wableVal/3*rand : wableVal/3*rand )
+      wabbleX.from = player.x+dir
+      wabbleX.to = player.x-dir
+      wabbleX.start()
+      rand = Math.random()
+      dir = (rand < 0.5 ? -wableVal/2*rand : wableVal/2*rand )
+      wabbleY.from = player.y+dir
+      wabbleY.to = player.y-dir
+      wabbleY.start()
   }
 
 }

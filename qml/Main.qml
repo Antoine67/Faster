@@ -16,7 +16,28 @@ GameWindow {
   // Show loading screen (splash)
   Component.onCompleted: {
     splash.opacity = 1
+    if ( !storage.getValue("bestScore") ) storage.setValue("bestScore", 0)
+    if ( !storage.getValue("playerSkin") ) storage.setValue("playerSkin", "ballon")
+    if ( !storage.getValue("enemySkin") ) storage.setValue("enemySkin", "bird")
+    console.log("cst font",customFont)
     mainItemDelay.start()
+  }
+
+  property alias customFont: customFont
+  FontLoader {
+    id: customFont
+    onStatusChanged: console.log(state)
+    source: "../assets/fonts/Avara.ttf"
+
+    Component.onCompleted: {
+      // Explicitly set the font name on Android
+      if (system.platform === System.Android)
+        customFont.name = "Avara"
+    }
+  }
+
+  Storage {
+      id: storage
   }
 
   // since the splash has a fade in animation, we delay the loading of the game until the splash is fully displayed for sure

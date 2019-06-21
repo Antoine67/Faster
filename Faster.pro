@@ -73,4 +73,6 @@ DISTFILES += \
     qml/scenes/MenuBreak.qml \
     qml/entities/Spike.qml \
     qml/scenes/MenuGameOver.qml \
-    qml/common/ImageRadioButton.qml
+    qml/common/ImageRadioButton.qml \
+    qml/common/Background2.qml \
+    qml/game/AudioManager.qml

@@ -11,12 +11,8 @@ SceneBase {
         let balloons = ["ballon","ballon2","ballon3","ballon4"]
         let spikes = ["bird", "bird", "bird"]
 
-        loadData(balloons, contentColumn, "Change your skin", false )
-
-        loadData(spikes, contentColumn, "Change the enemy skin", true )
-
-
-
+        loadData(balloons, contentColumn, "Pick up a cool balloon", false )
+        loadData(spikes, contentColumn, "Tired of birds ?", true )
 
     }
 
@@ -27,17 +23,37 @@ SceneBase {
       id: storage
     }
 
-
-
-
+    Background2 {
+      id: bg
+      z: 1
+    }
 
     NavigationStack {
-
+        z: 2
         initialPage: skinPage
+        anchors.fill: parent
+
+
 
         Page {
             id: skinPage
-            title: "Shop (not really all is free)"
+            title: "Changing room"
+            backgroundColor: "transparent"
+
+
+            leftBarItem: NavigationBarItem {
+                AppButton {
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: parent.height*0.8
+                    horizontalPadding: 0
+                    text: "⮜"
+                    onClicked: {
+                        mainItem.state = "menu"
+                    }
+
+                    z: 3
+                }
+            }
 
             AppFlickable {
                 id: contentDispl
@@ -56,13 +72,11 @@ SceneBase {
 
     function loadData(data, targetRow, title, isSpike) {
 
-        Qt.createQmlObject('import QtQuick 2.0; Text { anchors.horizontalCenter: parent.horizontalCenter; text: "'+ title + '"}', targetRow)
+        Qt.createQmlObject('import QtQuick 2.0; Text {  font.pixelSize: 20; color: "#3281ff"; anchors.horizontalCenter: parent.horizontalCenter; anchors.topMargin: 10; anchors.bottomMargin: 3; text: "'+ title + '"}', targetRow)
 
-        let row = Qt.createQmlObject('import QtQuick 2.0; Grid { anchors.horizontalCenter: parent.horizontalCenter; columns: 3; spacing: 2}', targetRow)
+        let row = Qt.createQmlObject('import QtQuick 2.0; Grid { z: 2 ;anchors.horizontalCenter: parent.horizontalCenter; columns: '+numberOfItemPerRow+'; spacing: 2}', targetRow)
 
         for(var nbRows = 0; nbRows < data.length; nbRows+=numberOfItemPerRow) { // A row contains 'numberOfItemPerRow' items
-
-            //let row = Qt.createQmlObject('import QtQuick 2.0; Row {}',contentColumn)
 
             for(var item = nbRows; item< nbRows+numberOfItemPerRow; item++) { // Display each item
 
@@ -90,13 +104,15 @@ SceneBase {
 
          if(!isSpike) {
              checkBox.onUserClick = function () {
-                storage.setValue("playerSkin", valueStr)
-                 console.log("playerSkin updated to "+valueStr)
+             storage.setValue("playerSkin", valueStr)
+             //audioManager.play(audioManager.idSELECTION_CHANGED)
+             //console.log("playerSkin updated to "+valueStr)
              }
          }else {
              checkBox.onUserClick = function () {
-                storage.setValue("enemySkin", valueStr)
-                 console.log("enemySkin updated to "+valueStr)
+             storage.setValue("enemySkin", valueStr)
+             //audioManager.play(audioManager.idSELECTION_CHANGED)
+             //console.log("enemySkin updated to "+valueStr)
              }
          }
 

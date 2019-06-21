@@ -142,6 +142,9 @@ Platform {
       for(var i = 0; i < obstacles.length; i++) {
           if(obstacles[i] !== null ) obstacles[i].stopMovement()
       }
+
+      locked_plat_1.showText = false
+      locked_plat_3.showText = false
   }
 
   function start() {
@@ -149,6 +152,9 @@ Platform {
       for(var i = 0; i < obstacles.length; i++) {
           if(obstacles[i] !== null ) obstacles[i].startMovement()
       }
+
+      locked_plat_1.showText = true
+      locked_plat_3.showText = true
   }
 
   function gameOver() {
@@ -178,7 +184,7 @@ Platform {
           entityProperties = {
               x: scene.width + 10,
               y: y,
-              velocity: -50,
+              velocity: -40,
               id: "spike"+obstaclesCount,
               shouldReversePicture: true,
 
@@ -191,7 +197,7 @@ Platform {
           entityProperties = {
               x: scene.width + 10,
               y: y,
-              velocity: -60,
+              velocity: -40,
               id: "spike"+obstaclesCount,
               shouldReversePicture: true,
 
@@ -238,7 +244,6 @@ Platform {
       let heightToReturn = heights[random]
       heightToReturn = Math.floor(Math.random()*(heightToReturn.max - heightToReturn.min +1)+heightToReturn.min)
 
-      console.log(heightToReturn, random)
       return heightToReturn
   }
 

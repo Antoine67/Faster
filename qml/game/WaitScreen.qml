@@ -11,11 +11,26 @@ Item {
 
   signal clicked()
 
-  MultiResolutionImage {
+  /*MultiResolutionImage {
     source: "../../assets/img/getReady.png"
     anchors.bottom: tutorial.top
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.bottomMargin: 30
+  }*/
+
+
+  Text {
+    //source: "../../assets/img/gameOver.png"
+    anchors.bottom: tutorial.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottomMargin: 30
+    font.family: customFont.name
+    font.pixelSize: 40
+    font.bold: true
+    color: "#2bff4b"
+    text: "Ready ?"
+
+
   }
 
   MultiResolutionImage {

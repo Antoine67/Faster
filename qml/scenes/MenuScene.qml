@@ -10,8 +10,21 @@ SceneBase {
   signal shopPressed()
 
 
-  Background {
+  Storage {
+      id: storage
+  }
 
+  Background {
+    id: bg
+  }
+
+  Text {
+      id: score
+      text: "Best score : "+storage.getValue("bestScore")
+      font.pixelSize: 30
+      font.family: customFont.name
+      anchors.bottom: parent.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
   }
 
 
@@ -34,6 +47,12 @@ SceneBase {
 
   onEnterPressed: {
     gamePressed()
+  }
+
+  function updateScore() {
+      score.text =  "Best score : "+storage.getValue("bestScore")
+      bg.start()
+      audioManager.play(audioManager.idMAIN_MUSIC)
   }
 
 

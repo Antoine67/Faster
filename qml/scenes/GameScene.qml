@@ -39,9 +39,7 @@ SceneBase {
        gravity.y: gravityValue // 9.81 would be earth-like gravity
 
        updatesPerSecondForPhysics: 60
-
        velocityIterations: 5
-
        positionIterations: 5
      }
 
@@ -106,8 +104,8 @@ SceneBase {
 
     // how long wait before adding a new obstacle
     function getInterval() {
-        let min_interval = 300
-        let interval = 2000 - score * 50;
+        let min_interval = 700
+        let interval = 2000 - score * 20;
 
         interval = interval < min_interval ? min_interval : interval //Don't go above limit
         return interval
@@ -119,6 +117,9 @@ SceneBase {
       GameOverScreen {
         z: 400
         id: gameOverStats
+        anchors.fill: scene
+
+
 
         onPlayPressed: {
             scene.state = "wait"
@@ -127,7 +128,6 @@ SceneBase {
         }
 
         onBackToMenuPressed: {
-           console.log("on menu prssed")
            exitScene()
         }
       }
@@ -138,7 +138,6 @@ SceneBase {
           id: breakScreen
           onPlayPressed: scene.state = "play"
           onBackToMenuPressed: {
-              //scene.state = "gameOver"
               exitScene()
           }
       }
@@ -152,6 +151,8 @@ SceneBase {
        text: score
        anchors.right: parent.right
        anchors.bottom: parent.bottom
+       font.family: customFont.name
+       font.pixelSize: 20
     }
 
 
@@ -243,10 +244,10 @@ SceneBase {
       stopGame()
       scene.state = "gameOver"
       level.gameOver()
-      if(score > 0) {
-        //TODO submit score and save it
-          console.log("score : " + score)
-      }
+
+      let bestScore = storage.getValue("bestScore")
+      storage.setValue("bestScore", Math.max(parseInt(bestScore), score)) //Update best score if necessary
+
     }
 
 
@@ -308,6 +309,7 @@ SceneBase {
           StateChangeScript {
             script: {
               gameOver()
+              gameOverStats.updateStats(score, storage.getValue("bestScore"))
             }
           }
         },

@@ -1,23 +1,19 @@
 import Felgo 3.0
 import QtQuick 2.0
 import "scenes"
-
-
+import "game"
 
 Item {
   id: mainItem
-  //property alias audioManager: audioManager
+  property alias audioManager: audioManager
   property alias entityManager: entityManager
-  //property alias gameNetwork: vplayGameNetworkScene.gameNetwork
 
-  // for easier reference from GameOverScreen
-  //property int highscore: gameNetwork.userHighscoreForCurrentActiveLeaderboard
   property int coins
 
   // global music and sound management
-  /*AudioManager {
+  AudioManager {
     id: audioManager
-  }*/
+  }
 
   MenuScene {
     id: menuScene
@@ -34,16 +30,6 @@ Item {
       nativeUtils.displayMessageBox("Really quit the game?", "", 2)
 
     }
-
-    /*Connections {
-      // nativeUtils should only be connected, when this is the active scene
-      target: window.activeScene === menuScene ? nativeUtils : null
-      onMessageBoxFinished: {
-        if(accepted) {
-            Qt.quit()
-        }
-      }
-    }*/
   }
 
   GameScene {
@@ -81,6 +67,7 @@ Item {
       StateChangeScript {
         script: {
           //audioManager.play(audioManager.idSWOOSHING)
+            menuScene.updateScore()
         }
       }
     },

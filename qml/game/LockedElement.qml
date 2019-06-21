@@ -6,6 +6,7 @@ Item {
     id: lockedElement
     anchors.fill: parent
     property string displayText
+    property bool showText : false
 
     Rectangle {
         opacity: 0.8
@@ -23,6 +24,9 @@ Item {
         text: qsTr(displayText)
         anchors.centerIn: parent
         color: "white"
+        font.family: customFont.name
+        font.pixelSize: 20
+        visible: showText
     }
 
 }
