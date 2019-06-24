@@ -328,7 +328,7 @@ SceneBase {
       AdMobInterstitial {
         id: ad_interstitial
         adUnitId: "ca-app-pub-8064326815486983/6253888405"
-        //testDeviceIds: [ "<your-test-device-id>" ]
+        testDeviceIds: [ "D7F08539C070A5EC83C37C427E3417AF" ]
 
         onInterstitialReceived: {
           //showInterstitialIfLoaded()

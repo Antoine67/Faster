@@ -117,17 +117,12 @@ Item {
            anchors.horizontalCenter: parent.horizontalCenter
            //anchors.bottom: parent.bottom
            //anchors.centerIn: parent
-           //testDeviceIds: Constants.admobTestDeviceIds
+           testDeviceIds: ["D7F08539C070A5EC83C37C427E3417AF"]
            height: 50
            z: 10000
            visible: true
            opacity: 1
 
-           /*Rectangle {
-               anchors.fill: adBanner
-               color: "red"
-               z:80
-           }*/
 
   }
 

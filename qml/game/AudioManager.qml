@@ -40,7 +40,7 @@ Item {
   }
   SoundEffect {
     id: balloon_exploded
-    source: "../../assets/audio/explode.wav"
+    source: "../../assets/audio/balloon_explosion.wav"
   }
   SoundEffect {
     id: ground_fall

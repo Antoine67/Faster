@@ -158,7 +158,7 @@ Platform {
   }
 
   function gameOver() {
-      console.log("level game over")
+
 
   }
 
@@ -259,7 +259,6 @@ Platform {
       p3.visible = false
   }
 
-  function showPlayer(player) { player.visible = true}
 
 
 }
